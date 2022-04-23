@@ -41,17 +41,15 @@ pipeline {
             steps {
                 input 'Deploy to Production'
                 milestone(1)
-                withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'om', passwordVariable: '123')]) {
-                    script {
-                        sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker pull om1395/train-schedule:${env.BUILD_NUMBER}\""
-                        try {
-                            sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker stop train-schedule\""
-                            sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker rm train-schedule\""
-                        } catch (err) {
-                            echo: 'caught error: $err'
-                          }
-                        sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker run --restart always --name train-schedule -p 3002:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\""
-                    }
+                script {
+                    sh sudo docker pull om1395/train-schedule:${env.BUILD_NUMBER}\""
+                    try {
+                        sh sudo docker stop train-schedule\""
+                        sh sudo docker rm train-schedule\""
+                    } catch (err) {
+                        echo: 'caught error: $err'
+                      }
+                    sh sudo docker run --restart always --name train-schedule -p 3002:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\""  
                 }
             }
         }
