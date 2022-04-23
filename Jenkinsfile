@@ -44,14 +44,16 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
                         app.pull("${env.BUILD_NUMBER}")
-                        app.pull("latest")                    
+                        app.pull("latest")   
+                    }
                     try {
                         sh sudo docker stop train-schedule\
                         sh sudo docker rm train-schedule\
-                    } catch (err) {
+                    } 
+                    catch (err) {
                         echo: 'caught error: $err'
-                      }
-                    sh sudo docker run --restart always --name train-schedule -p 3002:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\""  
+                    }
+                    sh sudo docker run --restart always --name train-schedule -p 3002:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\  
                 }
             }
         }
