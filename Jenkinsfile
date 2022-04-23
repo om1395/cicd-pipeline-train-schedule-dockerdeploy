@@ -42,9 +42,8 @@ pipeline {
                 input 'Deploy to Production'
                 milestone(1)
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.pull("${env.BUILD_NUMBER}")
-                        app.pull("latest")   
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {                    
+                        docker.image("train-schedule:latest").pull() 
                     }
                     try {
                         sh sudo docker stop train-schedule\
