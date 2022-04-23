@@ -41,16 +41,16 @@ pipeline {
             steps {
                 input 'Deploy to Production'
                 milestone(1)
-                withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'om', passwordVariable: '123')]) {
                     script {
-                        sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker pull om1395/train-schedule:${env.BUILD_NUMBER}\""
+                        sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker pull om1395/train-schedule:${env.BUILD_NUMBER}\""
                         try {
-                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker stop train-schedule\""
-                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker rm train-schedule\""
+                            sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker stop train-schedule\""
+                            sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker rm train-schedule\""
                         } catch (err) {
                             echo: 'caught error: $err'
                           }
-                        sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker run --restart always --name train-schedule -p 3002:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\""
+                        sh "sshpass -p '123' -v ssh -o StrictHostKeyChecking=no om@${env.prod_ip} \"docker run --restart always --name train-schedule -p 3002:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\""
                     }
                 }
             }
