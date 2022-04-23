@@ -46,8 +46,8 @@ pipeline {
                         app.pull("${env.BUILD_NUMBER}")
                         app.pull("latest")                    
                     try {
-                        sh sudo docker stop train-schedule\""
-                        sh sudo docker rm train-schedule\""
+                        sh sudo docker stop train-schedule\
+                        sh sudo docker rm train-schedule\
                     } catch (err) {
                         echo: 'caught error: $err'
                       }
