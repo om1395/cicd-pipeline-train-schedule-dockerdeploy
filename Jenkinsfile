@@ -42,7 +42,9 @@ pipeline {
                 input 'Deploy to Production'
                 milestone(1)
                 script {
-                    sh sudo docker pull om1395/train-schedule:${env.BUILD_NUMBER}\""
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.pull("${env.BUILD_NUMBER}")
+                        app.pull("latest")                    
                     try {
                         sh sudo docker stop train-schedule\""
                         sh sudo docker rm train-schedule\""
