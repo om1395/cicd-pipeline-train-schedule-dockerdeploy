@@ -41,7 +41,7 @@ pipeline {
             steps {
                 input 'Deploy to Production'
                 milestone(1)
-                withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'om', passwordVariable: '123')]) {
                     script {
                         sh 'touch /home/om/Desktop/DevOps/men'
                     }
