@@ -41,16 +41,16 @@ pipeline {
             steps {
                 input 'Deploy to Production'
                 milestone(1)
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {                    
-                        docker.image("train-schedule:latest").pull() 
-                    }
-                    try {
-                        sh sudo docker stop train-schedule\
-                        sh sudo docker rm train-schedule\
-                    } 
-                    catch (err) {
-                        echo: 'caught error: $err'
+                withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    script {
+                        sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker pull om1395/train-schedule:${env.BUILD_NUMBER}\""
+                        try {
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker stop train-schedule\""
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker rm train-schedule\""
+                        } catch (err) {
+                            echo: 'caught error: $err'
+                        }
+                        sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker run --restart always --name train-schedule -p 3001:8080 -d om1395/train-schedule:${env.BUILD_NUMBER}\""
                     }
                 }
             }
